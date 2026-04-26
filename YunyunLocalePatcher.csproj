@@ -14,6 +14,11 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Include="src\Core.cs" />
+	  <Compile Include="src\Csv.cs" />
+	  <Compile Include="src\PatchFile.cs" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Reference Include="Accessibility">
@@ -433,9 +438,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="Core.cs" />
-		<Compile Include="Csv.cs" />
-		<Compile Include="PatchFile.cs" />
 		<Content Include="Directory.Build.props" />
 	</ItemGroup>
 	
