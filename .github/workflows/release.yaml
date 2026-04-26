@@ -1,0 +1,48 @@
+name: Release
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+    
+      - name: Checkout libs
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ secrets.LIBS_REPOSITORY }}
+          token: ${{ secrets.LIBS_REPOSITORY_TOKEN }}
+          path: libs
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build Release
+        run: dotnet build --no-restore --configuration Release /p:InstallModAfterBuild=false /p:GameLibs=./libs /p:MelonLibs=./libs
+
+      - name: Prepare release folder structure
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path release\Mods
+          New-Item -ItemType Directory -Path release\UserData\LocalePatches
+          Copy-Item bin\x64\Release\netstandard2.1\YunyunLocalePatcher.dll release\Mods\
+
+      - name: Compress Artifacts
+        run: |
+          Compress-Archive -Path release/* -DestinationPath YunyunLocalePatcher.zip
+
+      - name: Upload Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: YunyunLocalePatcher.zip
+          token: ${{ secrets.RELEASE_TOKEN }}

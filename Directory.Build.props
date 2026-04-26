@@ -1,5 +1,10 @@
 <Project>
-  <PropertyGroup>
-    <GamePath>D:\Steam\steamapps\common\Yunyun_Syndrome</GamePath>
-  </PropertyGroup>
+	<Import Condition="Exists('Directory.Build.props.user')" Project="Directory.Build.props.user" />
+
+	<PropertyGroup>
+		<GamePath Condition="'$(GamePath)' == ''">C:\Steam\steamapps\common\Yunyun_Syndrome</GamePath>
+
+		<GameLibs>$(GamePath)\Yunyun_Syndrome_Data\Managed</GameLibs>
+		<MelonLibs>$(GamePath)\MelonLoader\net35</MelonLibs>
+	</PropertyGroup>
 </Project>

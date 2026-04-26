@@ -1,0 +1,6 @@
+<Project>
+	<PropertyGroup>
+		<GamePath>C:\Steam\steamapps\common\Yunyun_Syndrome</GamePath>
+		<InstallModAfterBuild>true</InstallModAfterBuild>
+	</PropertyGroup>
+</Project>

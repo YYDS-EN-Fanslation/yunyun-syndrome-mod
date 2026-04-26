@@ -1,5 +1,7 @@
 # YunyunLocalePatcher
 
+[![Release](https://github.com/funmaker/YunyunLocalePatcher/actions/workflows/release.yaml/badge.svg)](https://github.com/funmaker/YunyunLocalePatcher/releases)
+
 This mod allows you to patch locale strings in order to tweak localization, translation texts, etc.
 
 ## How to Install
