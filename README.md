@@ -16,6 +16,7 @@ This mod allows you to patch locale strings in order to tweak localization, tran
     4. Copy contents into game folder, make sure `Mods` and `UserData` folders are merged and the `YunyunLocalePatcher.dll` ended up
        in `Yunyun_Syndrome\Mods` directory. 
 3. Put any locale patches in `Yunyun_Syndrome\UserData\LocalePatches` directory.
+    - For example: [JP -> EN machine translation](https://raw.githubusercontent.com/funmaker/YunyunLocalePatcher/refs/heads/master/examples/20-english-mtl.csv)
 
 ## How to make patches?
 
