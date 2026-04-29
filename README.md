@@ -41,6 +41,3 @@ This mod allows you to patch locale strings in order to tweak localization, tran
 This mod simply hooks into Unity Localization using ITablePostprocessor interface and modifies StringTables as they are loaded.
 The patches loaded from `Yunyun_Syndrome\UserData\LocalePatches\*.csv` are applied in alphabetical order, so you can use names
 like `10-initial.csv`, `50-common.csv`, `90-extra.csv`, etc to control the order in which patches are applied.
-
-Given simplicity of this mod, this should probably work for more games than Yunyun. It is actually configured to be an universal Melonloader mod
-which means it can be loaded by any Mono based Unity game(probably won't work on IL2CPP). I haven't tested it though.

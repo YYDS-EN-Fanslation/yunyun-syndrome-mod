@@ -21,6 +21,8 @@
 	  <Compile Include="src\LocalePatcherCore.cs" />
 	  <Compile Include="src\Csv.cs" />
 	  <Compile Include="src\PatchFile.cs" />
+	  <Compile Include="src\StringTablePatcher.cs" />
+	  <Compile Include="src\TextAssetPatcher.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -33,11 +35,20 @@
 		<Reference Include="UnityEngine.CoreModule">
 			<HintPath>$(GameLibs)\UnityEngine.CoreModule.dll</HintPath>
 		</Reference>
+		<Reference Include="UnityEngine.JSONSerializeModule">
+			<HintPath>$(GameLibs)\UnityEngine.JSONSerializeModule.dll</HintPath>
+		</Reference>
+		<Reference Include="ANovel.Core">
+			<HintPath>$(GameLibs)\ANovel.Core.dll</HintPath>
+		</Reference>
 		<Reference Include="UnityEngine">
 			<HintPath>$(GameLibs)\UnityEngine.dll</HintPath>
 		</Reference>
 		<Reference Include="MelonLoader">
 			<HintPath>$(MelonLibs)\MelonLoader.dll</HintPath>
+		</Reference>
+		<Reference Include="0Harmony">
+			<HintPath>$(MelonLibs)\0Harmony.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 	
