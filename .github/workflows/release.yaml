@@ -18,6 +18,13 @@ jobs:
           repository: ${{ secrets.LIBS_REPOSITORY }}
           token: ${{ secrets.LIBS_REPOSITORY_TOKEN }}
           path: libs
+    
+      - name: Checkout translation
+        uses: actions/checkout@v4
+        with:
+          repository: YYDS-EN-Fanslation/yunyun-syndrome-translation
+          token: ${{ secrets.LIBS_REPOSITORY_TOKEN }}
+          path: translations
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -36,6 +43,7 @@ jobs:
           New-Item -ItemType Directory -Path release\Mods
           New-Item -ItemType Directory -Path release\UserData\LocalePatches
           Copy-Item bin\x64\Release\netstandard2.1\YunyunLocalePatcher.dll release\Mods\
+          Copy-Item "translations\YYDS EN Fanslation - MTL Patch.csv" release\UserData\LocalePatches\20-yyds-en-fanslation.csv
 
       - name: Compress Artifacts
         run: |
