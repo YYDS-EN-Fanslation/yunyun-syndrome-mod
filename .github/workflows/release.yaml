@@ -40,10 +40,11 @@ jobs:
       - name: Prepare release folder structure
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Path release\Mods
-          New-Item -ItemType Directory -Path release\UserData\LocalePatches
-          Copy-Item bin\x64\Release\netstandard2.1\YunyunLocalePatcher.dll release\Mods\
-          Copy-Item "translations\YYDS EN Fanslation - MTL Patch.csv" release\UserData\LocalePatches\20-yyds-en-fanslation.csv
+          New-Item -ItemType Directory -Path "release\Mods"
+          New-Item -ItemType Directory -Path "release\UserData\LocalePatches"
+          Copy-Item "bin\x64\Release\netstandard2.1\YunyunLocalePatcher.dll" "release\Mods\"
+          Copy-Item "translations\YYDS EN Fanslation - MTL Patch.csv" "release\UserData\LocalePatches\20-yyds-en-fanslation.csv"
+          Copy-Item -Recurse "translations\YYDS-EN-Fanslation" "release\UserData\LocalePatches\YYDS-EN-Fanslation"
 
       - name: Compress Artifacts
         run: |

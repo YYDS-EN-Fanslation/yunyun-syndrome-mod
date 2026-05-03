@@ -10,6 +10,7 @@ public static class TextAssetPatcher
 {
     static void Postfix(TextAsset __instance, ref string __result)
     {
+        if (LocalePatcherCore.patches == null) return;
         if (!__instance.name.EndsWith(".lang")) return;
 
         try

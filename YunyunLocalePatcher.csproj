@@ -21,7 +21,7 @@
 	  <Compile Include="src\LocalePatcherCore.cs" />
 	  <Compile Include="src\Csv.cs" />
 	  <Compile Include="src\PatchFile.cs" />
-	  <Compile Include="src\StringTablePatcher.cs" />
+	  <Compile Include="src\TablePatcher.cs" />
 	  <Compile Include="src\TextAssetPatcher.cs" />
 	</ItemGroup>
 
@@ -37,6 +37,9 @@
 		</Reference>
 		<Reference Include="UnityEngine.JSONSerializeModule">
 			<HintPath>$(GameLibs)\UnityEngine.JSONSerializeModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.ImageConversionModule">
+			<HintPath>$(GameLibs)\UnityEngine.ImageConversionModule.dll</HintPath>
 		</Reference>
 		<Reference Include="ANovel.Core">
 			<HintPath>$(GameLibs)\ANovel.Core.dll</HintPath>
