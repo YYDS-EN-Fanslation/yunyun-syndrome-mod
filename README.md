@@ -1,6 +1,8 @@
 # Yunyun Denpa Syndrome Translation Mod
 
+[![Discord](https://img.shields.io/discord/1497391770118393967)](https://discord.gg/jYjTd5qpKv)
 [![Release](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-mod/actions/workflows/release.yaml/badge.svg)](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-mod/releases)
+[![Releases](https://img.shields.io/github/v/release/YYDS-EN-Fanslation/yunyun-syndrome-mod?label=Latest%20Version)](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-mod/releases)
 
 This is a mod for game [Yunyun Syndrome!? Rhythm Psychosis](https://store.steampowered.com/app/2914150/Yunyun_Syndrome_Rhythm_Psychosis/)
 from [YYDS EN Fanslation Project](https://github.com/YYDS-EN-Fanslation). It loads and applies patches which can modify ingame texts and scenes in order
