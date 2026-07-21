@@ -6,5 +6,6 @@
 
 		<GameLibs>$(GamePath)\Yunyun_Syndrome_Data\Managed</GameLibs>
 		<MelonLibs>$(GamePath)\MelonLoader\net35</MelonLibs>
+		<BepInCore>$(GamePath)\BepInEx\core</BepInCore>
 	</PropertyGroup>
 </Project>

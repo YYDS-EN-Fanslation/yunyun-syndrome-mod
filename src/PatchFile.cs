@@ -1,5 +1,3 @@
-using MelonLoader;
-
 namespace YunyunLocalePatcher;
 
 public class PatchFile
@@ -53,7 +51,7 @@ public class PatchFile
             }
             else
             {
-                MelonLogger.Warning($"[{filename}]: Expected 3 comma separated values, got: `{row.Count}`");
+                LocalePatcherCore.Log($"[{filename}]: Expected 3 comma separated values, got: `{row.Count}`");
             }
         }
 

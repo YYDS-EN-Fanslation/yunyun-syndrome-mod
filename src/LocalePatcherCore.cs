@@ -1,67 +1,82 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Text;
 using ANovel.Core;
-using MelonLoader;
-using MelonLoader.Utils;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-[assembly: MelonInfo(typeof(YunyunLocalePatcher.LocalePatcherCore), "YunyunLocalePatcher", "1.4.0", "FunMaker", null)]
-[assembly: MelonGame("AllianceArts", "Yunyun_Syndrome")]
-
 namespace YunyunLocalePatcher;
 
-public class LocalePatcherCore : MelonMod
+public class LocalePatcherCore
 {
     public static PatchFile patches;
-    public static string patchesRoot = Path.Combine(MelonEnvironment.UserDataDirectory, "LocalePatches");
-    private HarmonyLib.Harmony _harmony;
+    public static string patchesRoot;
+    public static ILocalePatcher localePatcher;
+    private static HarmonyLib.Harmony harmony;
 
-    public override void OnInitializeMelon()
+    public static void OnInitialize(ILocalePatcher localePatcher)
     {
+        LocalePatcherCore.localePatcher = localePatcher;
+
+        patchesRoot = Path.Combine(localePatcher.GetUserDataDir(), "LocalePatches");
+
         string[] args = Environment.GetCommandLineArgs();
         if (args.Contains("--localepatcher.dumpstrings"))
         {
             string dumpName = "00-base";
-            MelonLogger.Msg($"--localepatcher.dumpstrings has been passed to the game. Dumping all translation strings to ${Path.Combine(patchesRoot, dumpName)}.csv");
-            MelonCoroutines.Start(DumpAllStrings(dumpName));
+            Log($"--localepatcher.dumpstrings has been passed to the game. Dumping all translation strings to ${Path.Combine(patchesRoot, dumpName)}.csv");
+            localePatcher.StartCoroutine(DumpAllStrings(dumpName));
             return;
         }
 
         var patches = LocalePatcherCore.patches = LoadAllPatches();
         if (patches.Count == 0)
         {
-            MelonLogger.Warning("Nothing to patch! Quitting.");
+            LogWarning("Nothing to patch! Quitting.");
             return;
         }
 
         var settings = LocalizationSettings.Instance;
         if (settings == null || settings.GetStringDatabase().TablePostprocessor != null)
         {
-            MelonLogger.Error("Table postprocessor is already registered. YunyunLocalePatcher will not work.");
+            LogError("Table postprocessor is already registered. YunyunLocalePatcher will not work.");
             return;
         }
 
         TablePatcher tablePatcher = new TablePatcher();
 
         settings.GetStringDatabase().TablePostprocessor = tablePatcher;
-        MelonLogger.Msg("StringTable postprocessor registered.");
+        Log("StringTable postprocessor registered.");
 
         settings.GetAssetDatabase().TablePostprocessor = tablePatcher;
-        MelonLogger.Msg("AssetTable postprocessor registered.");
+        Log("AssetTable postprocessor registered.");
 
-        this._harmony = new HarmonyLib.Harmony("com.funmaker.yunyunpatch");
-        this._harmony.PatchAll();
-        MelonLogger.Msg("TextAsset patch registered.");
+        harmony = localePatcher.GetHarmony();
+        harmony.PatchAll();
+        Log("TextAsset patch registered.");
 
-        MelonLogger.Msg("Intialization complete.");
+        Log("Intialization complete.");
     }
 
-    private PatchFile LoadAllPatches()
+    public static void Log(string message)
     {
-        MelonLogger.Msg($"Loading patches from {patchesRoot}");
+        if (localePatcher != null) localePatcher.Log(message);
+    }
+
+    public static void LogWarning(string message)
+    {
+        if (localePatcher != null) localePatcher.LogWarning(message);
+    }
+
+    public static void LogError(string message)
+    {
+        if (localePatcher != null) localePatcher.LogError(message);
+    }
+
+    private static PatchFile LoadAllPatches()
+    {
+        Log($"Loading patches from {patchesRoot}");
 
         var patches = new PatchFile();
         int fileCount = 0;
@@ -77,34 +92,34 @@ public class LocalePatcherCore : MelonMod
                 {
                     if (fileName == "00-base.csv")
                     {
-                        MelonLogger.Warning($"Skipping 00-base.csv. Have you forgotten to remove it?");
+                        LogWarning($"Skipping 00-base.csv. Have you forgotten to remove it?");
                         continue;
                     }
 
-                    MelonLogger.Msg($"Loading {fileName}");
+                    Log($"Loading {fileName}");
                     var patchFile = PatchFile.Load(file);
                     patches.Append(patchFile);
                     fileCount += 1;
-                    MelonLogger.Msg($"Loaded {fileName} ({patches.Count} entries)");
+                    Log($"Loaded {fileName} ({patches.Count} entries)");
                 }
                 catch (Exception ex)
                 {
-                    MelonLogger.Error($"Couldn't load {fileName}: {ex.Message}");
+                    LogError($"Couldn't load {fileName}: {ex.Message}");
                 }
             }
         }
         else
         {
-            MelonLogger.Warning($"Directory doesn't exist. Creating.");
+            LogWarning($"Directory doesn't exist. Creating.");
             Directory.CreateDirectory(patchesRoot);
         }
 
-        MelonLogger.Msg($"Loaded {fileCount} patch files, {patches.Count} entries in total");
+        Log($"Loaded {fileCount} patch files, {patches.Count} entries in total");
 
         return patches;
     }
 
-    private IEnumerator DumpAllStrings(string dumpName)
+    private static IEnumerator DumpAllStrings(string dumpName)
     {
         yield return LocalizationSettings.InitializationOperation;
 
@@ -115,14 +130,14 @@ public class LocalePatcherCore : MelonMod
 
         foreach (var locale in locales)
         {
-            MelonLogger.Msg($"Dumping StringTables for Locale: {locale.LocaleName}");
+            Log($"Dumping StringTables for Locale: {locale.LocaleName}");
 
             var handle = LocalizationSettings.StringDatabase.GetAllTables(locale);
             yield return handle;
 
             if (handle.Status != AsyncOperationStatus.Succeeded)
             {
-                MelonLogger.Warning($"Failed to load string tables for {locale.LocaleName}");
+                LogWarning($"Failed to load string tables for {locale.LocaleName}");
                 continue;
             }
 
@@ -145,14 +160,14 @@ public class LocalePatcherCore : MelonMod
 
         foreach (var locale in locales)
         {
-            MelonLogger.Msg($"Dumping AssetTables for Locale: {locale.LocaleName}");
+            Log($"Dumping AssetTables for Locale: {locale.LocaleName}");
 
             var handle = LocalizationSettings.AssetDatabase.GetAllTables(locale);
             yield return handle;
 
             if (handle.Status != AsyncOperationStatus.Succeeded)
             {
-                MelonLogger.Warning($"Failed to load asset tables for {locale.LocaleName}");
+                LogWarning($"Failed to load asset tables for {locale.LocaleName}");
                 continue;
             }
 
@@ -167,7 +182,7 @@ public class LocalePatcherCore : MelonMod
 
                         if (assetHandle.Status != AsyncOperationStatus.Succeeded)
                         {
-                            MelonLogger.Warning($"Failed to load asset for key '{entry.Key}' in table '{at.name}'");
+                            LogWarning($"Failed to load asset for key '{entry.Key}' in table '{at.name}'");
                             continue;
                         }
 
@@ -179,7 +194,7 @@ public class LocalePatcherCore : MelonMod
                         else if (asset is Sprite sprite) texture = LocalePatcherCore.GetReadableSprite(sprite);
                         else
                         {
-                            MelonLogger.Msg($"Asset '{entry.Key}' is not a Texture2D or Sprite, skipping.");
+                            Log($"Asset '{entry.Key}' is not a Texture2D or Sprite, skipping.");
                             continue;
                         }
 
@@ -207,7 +222,7 @@ public class LocalePatcherCore : MelonMod
 
             if (textAsset.name.EndsWith(".lang"))
             {
-                MelonLogger.Msg($"Dumping Event lines for: {textAsset.name}");
+                Log($"Dumping Event lines for: {textAsset.name}");
 
                 try
                 {
@@ -228,7 +243,7 @@ public class LocalePatcherCore : MelonMod
                 }
                 catch (Exception ex)
                 {
-                    MelonLogger.Error(ex);
+                    LogError(ex.ToString());
                 }
             }
         }
@@ -247,12 +262,12 @@ public class LocalePatcherCore : MelonMod
 
         File.WriteAllText(Path.Combine(patchesRoot, $"{dumpName}.csv"), dump.ToString());
 
-        MelonLogger.Msg($"Dumped {entries.Count} entries to {dumpName}.csv");
+        Log($"Dumped {entries.Count} entries to {dumpName}.csv");
 
-        MelonLogger.Warning($"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        MelonLogger.Warning($"!              YunyunLocalePatcher will not patch any locales!              !");
-        MelonLogger.Warning($"! Remove --localepatcher.dumpstrings from launch options to enable patching !");
-        MelonLogger.Warning($"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        LogWarning($"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        LogWarning($"!              YunyunLocalePatcher will not patch any locales!              !");
+        LogWarning($"! Remove --localepatcher.dumpstrings from launch options to enable patching !");
+        LogWarning($"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
     private static Texture2D GetReadableTexture(Texture2D source)

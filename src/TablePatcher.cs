@@ -1,4 +1,4 @@
-using MelonLoader;
+
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
@@ -10,7 +10,7 @@ public class TablePatcher : ITablePostprocessor
 {
     public void PostprocessTable(LocalizationTable table)
     {
-        MelonLogger.Msg($"Patching table: {table.name}...");
+        LocalePatcherCore.Log($"Patching table: {table.name}...");
 
         if (LocalePatcherCore.patches == null) return;
 
@@ -19,7 +19,7 @@ public class TablePatcher : ITablePostprocessor
             if (table is StringTable stringTable)
             {
                 string tableName = stringTable.name;
-                MelonLogger.Msg($"Patching string table: {tableName}...");
+                LocalePatcherCore.Log($"Patching string table: {tableName}...");
 
                 int count = 0;
                 foreach (var entry in stringTable.Values)
@@ -32,12 +32,12 @@ public class TablePatcher : ITablePostprocessor
                     }
                 }
 
-                MelonLogger.Msg($"Patched {count} entries in {tableName}.");
+                LocalePatcherCore.Log($"Patched {count} entries in {tableName}.");
             }
             else if (table is AssetTable assetTable)
             {
                 string tableName = assetTable.name;
-                MelonLogger.Msg($"Patching asset table: {tableName}...");
+                LocalePatcherCore.Log($"Patching asset table: {tableName}...");
 
                 int count = 0;
                 foreach (var entry in assetTable.Values)
@@ -48,7 +48,7 @@ public class TablePatcher : ITablePostprocessor
                         assetPath = Path.Combine(LocalePatcherCore.patchesRoot, assetPath);
                         if (!File.Exists(assetPath))
                         {
-                            MelonLogger.Warning($"File not found: {assetPath} (replacing {entry.Key} for {tableName})");
+                            LocalePatcherCore.LogWarning($"File not found: {assetPath} (replacing {entry.Key} for {tableName})");
                             continue;
                         }
 
@@ -56,7 +56,7 @@ public class TablePatcher : ITablePostprocessor
                         Texture2D texture = new Texture2D(2, 2); // dimensions will be replaced by LoadImage
                         if (!texture.LoadImage(imageData))
                         {
-                            MelonLogger.Warning($"Failed to load image: {assetPath} (replacing {entry.Key} for {tableName})");
+                            LocalePatcherCore.LogWarning($"Failed to load image: {assetPath} (replacing {entry.Key} for {tableName})");
                             UnityEngine.Object.Destroy(texture);
                             continue;
                         }
@@ -72,12 +72,12 @@ public class TablePatcher : ITablePostprocessor
                     }
                 }
 
-                MelonLogger.Msg($"Patched {count} entries in {tableName}.");
+                LocalePatcherCore.Log($"Patched {count} entries in {tableName}.");
             }
         }
         catch (Exception ex)
         {
-            MelonLogger.Error(ex);
+            LocalePatcherCore.LogError(ex.ToString());
         }
     }
 }

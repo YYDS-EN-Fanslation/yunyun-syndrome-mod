@@ -9,20 +9,38 @@
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<FileVersion>1.0.0.0</FileVersion>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<AssemblyName>YunyunLocalePatcher</AssemblyName>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Platforms>AnyCPU;x64</Platforms>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+		<Optimize>true</Optimize>
+		<Configurations>MelonLoader;BepInEx</Configurations>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='MelonLoader'">
+		<AssemblyName>YunyunLocalePatcher.MelonLoader</AssemblyName>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='BepInEx'">
+		<AssemblyName>YunyunLocalePatcher.BepInEx</AssemblyName>
 	</PropertyGroup>
 	
 	<ItemGroup>
-	  <Compile Include="src\LocalePatcherCore.cs" />
-	  <Compile Include="src\Csv.cs" />
-	  <Compile Include="src\PatchFile.cs" />
-	  <Compile Include="src\TablePatcher.cs" />
-	  <Compile Include="src\TextAssetPatcher.cs" />
+		<Compile Include="src\ILocalePatcher.cs" />
+		<Compile Include="src\LocalePatcherCore.cs" />
+		<Compile Include="src\Csv.cs" />
+		<Compile Include="src\PatchFile.cs" />
+		<Compile Include="src\TablePatcher.cs" />
+		<Compile Include="src\TextAssetPatcher.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)'=='MelonLoader'">
+		<Compile Include="src\LocalePatcherMelonLoader.cs" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)'=='BepInEx'">
+		<Compile Include="src\LocalePatcherBepInEx.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -47,6 +65,9 @@
 		<Reference Include="UnityEngine">
 			<HintPath>$(GameLibs)\UnityEngine.dll</HintPath>
 		</Reference>
+	</ItemGroup>
+	
+	<ItemGroup Condition="'$(Configuration)'=='MelonLoader'">
 		<Reference Include="MelonLoader">
 			<HintPath>$(MelonLibs)\MelonLoader.dll</HintPath>
 		</Reference>
@@ -54,8 +75,24 @@
 			<HintPath>$(MelonLibs)\0Harmony.dll</HintPath>
 		</Reference>
 	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)'=='BepInEx'">
+		<Reference Include="BepInEx">
+			<HintPath>$(BepInCore)\BepInEx.dll</HintPath>
+		</Reference>
+		<Reference Include="BepInEx.Harmony">
+			<HintPath>$(BepInCore)\BepInEx.Harmony.dll</HintPath>
+		</Reference>
+		<Reference Include="BepInEx.Preloader">
+			<HintPath>$(BepInCore)\BepInEx.Preloader.dll</HintPath>
+		</Reference>
+		<Reference Include="0Harmony">
+			<HintPath>$(BepInCore)\0Harmony.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 	
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(InstallModAfterBuild)' == 'true'">
-		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;$(GamePath)/Mods&quot;" />
+		<Exec Condition="'$(Configuration)'=='MelonLoader'" Command="COPY &quot;$(TargetPath)&quot; &quot;$(GamePath)/Mods&quot;" />
+		<Exec Condition="'$(Configuration)'=='BepInEx'" Command="COPY &quot;$(TargetPath)&quot; &quot;$(GamePath)/BepInEx/plugins&quot;" />
 	</Target>
 </Project>

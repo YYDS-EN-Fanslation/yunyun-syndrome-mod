@@ -1,13 +1,12 @@
-# Yunyun Denpa Syndrome Translation Mod
+﻿# Yunyun Denpa Syndrome Translation Mod
 
 [![Discord](https://img.shields.io/discord/1497391770118393967)](https://discord.gg/jYjTd5qpKv)
 [![Release](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-mod/actions/workflows/release.yaml/badge.svg)](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-mod/releases)
 [![Releases](https://img.shields.io/github/v/release/YYDS-EN-Fanslation/yunyun-syndrome-mod?label=Latest%20Version)](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-mod/releases)
 
-This is a mod for game [Yunyun Syndrome!? Rhythm Psychosis](https://store.steampowered.com/app/2914150/Yunyun_Syndrome_Rhythm_Psychosis/)
-from [YYDS EN Fanslation Project](https://github.com/YYDS-EN-Fanslation). It loads and applies patches which can modify ingame texts and scenes in order
-to tweak, change and fix game's localization. The current release version of the mod come with MTL translations, but will eventually be updated with
-human translation provided by YYDS EN Fanslation Project.
+This is a mod for [Yunyun Syndrome!? Rhythm Psychosis](https://store.steampowered.com/app/2914150/Yunyun_Syndrome_Rhythm_Psychosis/)
+from the [YYDS EN Fanslation Project](https://github.com/YYDS-EN-Fanslation). It loads and applies patches which can modify in-game text and images in order
+to tweak, change and fix the game's localization. By default, YYDS fanslation is included in the release bundle.
 
 Looking for something else?
 - [Yunyun Syndrome Patch](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-patch) - Alternative patcher with simple installer
@@ -16,27 +15,36 @@ Looking for something else?
 - [YYDS EN Fanslation Discord](https://discord.com/invite/Pd3CWA8BfD) - Our Discord
 
 ## How to Install
+1. Install **either** [MelonLoader](https://github.com/LavaGang/MelonLoader.Installer/tree/master#melonloader-installation) or [BepInEx](https://github.com/BepInEx/BepInEx/releases/) (do not install both!)
+    - **MelonLoader**
+        1. Go to [Releases](https://github.com/LavaGang/MelonLoader.Installer/releases)
+        2. Download and run the newest **Melonloader.Installer.exe**
+        3. Choose "Yunyun Syndrome!? Rhythm Psychosis"
+        4. Press "Install"
+        5. **(Linux only)** In Steam set Launch Options for Yunyun to `WINEDLLOVERRIDES="version=n,b" %command%` [read more](https://melonwiki.xyz/#/?id=windows-games-wineproton)
+    - **BepInEx**
+        1. Go to [Releases](https://github.com/BepInEx/BepInEx/releases/)
+        2. Download the newest **BepInEx_win_x64_\*.\*.\*.\*.zip**
+        3. Extract files into game folder *(eg: C:\Steam\steamapps\common\Yunyun_Syndrome)*
+        4. Make sure you have `BepInEx` folder in your game root now.
 
-1. Install [Melonloader](https://github.com/LavaGang/MelonLoader.Installer/tree/master#melonloader-installation)
-    1. Go to [Releases](https://github.com/LavaGang/MelonLoader.Installer/releases)
-    2. Download the newest **Melonloader.Installer.exe**
-    3. Choose "Yunyun Syndrome!? Rhythm Psychosis"
-    4. Press "Install"
-    5. **(Linux only)** In Steam set Launch Options for Yunyun to `WINEDLLOVERRIDES="version=n,b" %command%` [read more](https://melonwiki.xyz/#/?id=windows-games-wineproton)
 2. Install [YunyunLocalePatcher](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-mod)
     1. Go to [Releases](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-mod/releases)
-    2. Download the newest **YunyunLocalePatcher.zip**
-    3. Extract files
-    4. Copy contents into game folder, make sure `Mods` and `UserData` folders are merged and the `YunyunLocalePatcher.dll` ended up
+    2. Download the newest **YunyunLocalePatcher.Melonloader.zip** or **YunyunLocalePatcher.BepInEx.zip** depending on your mod loader of choice.
+    3. Extract files into game folder *(eg: C:\Steam\steamapps\common\Yunyun_Syndrome)*
+    4. Copy contents into game folder, make sure `Mods` or `BepInEx` folders are merged and the `YunyunLocalePatcher.dll` ended up
        in `Yunyun_Syndrome\Mods` directory. 
+
 3. **(optional)** Add/remove locale patches in `Yunyun_Syndrome\UserData\LocalePatches` directory. For example:
     - [Radish](https://github.com/Radish-sys)'s MTL: [JP -> EN](https://raw.githubusercontent.com/YYDS-EN-Fanslation/yunyun-syndrome-translation/refs/heads/master/YYDS%20EN%20Fanslation%20-%20MTL%20Patch.csv)
     - Google Translate MTL: [JP -> EN](https://raw.githubusercontent.com/funmaker/YunyunLocalePatcher/refs/heads/master/examples/20-english-mtl.csv) (no dialogues)
     - [Moshi Moshi](https://github.com/lIllIIlI)'s: [JP -> EN](https://raw.githubusercontent.com/funmaker/YunyunLocalePatcher/refs/heads/master/examples/20-faithful-english.csv) ([#2](https://github.com/funmaker/YunyunLocalePatcher/pull/2)) (no dialogues)
 
+#### ⚠️ The mod file name changed in v1.5.0. If you want to update from any previous version, remove the old dll file named `YunyunLocalePatcher.dll` from `Yunyun_Syndrome\Mods` to avoid conflicts.
+
 ## How to make patches?
 
-- (optional) Once you have mod installed, you can run the game with `--localepatcher.dumpstrings` launch option. This will create `00-base.csv`
+- (optional) Once you have the mod installed, you can run the game with the `--localepatcher.dumpstrings` launch option to create a `00-base.csv`
   file in `Yunyun_Syndrome\UserData\LocalePatches` which will contain all the translation related strings.
 - **Make sure to remove `--localepatcher.dumpstrings` flag from launch options and delete/move `00-base.csv` file!** YunyunLocalePatcher will
   not load any patches if that flag is present in launch options!

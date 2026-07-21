@@ -1,6 +1,5 @@
 using ANovel.Core;
 using HarmonyLib;
-using MelonLoader;
 using UnityEngine;
 
 namespace YunyunLocalePatcher;
@@ -15,7 +14,7 @@ public static class TextAssetPatcher
 
         try
         {
-            MelonLogger.Msg($"Patching text asset: {__instance.name}...");
+            LocalePatcherCore.Log($"Patching text asset: {__instance.name}...");
 
             LocalizeData localizeData = JsonUtility.FromJson<LocalizeData>(__result);
 
@@ -33,7 +32,7 @@ public static class TextAssetPatcher
                 }
             }
 
-            MelonLogger.Msg($"Patched {count} entries in {__instance.name}.");
+            LocalePatcherCore.Log($"Patched {count} entries in {__instance.name}.");
 
             if (count > 0)
             {
@@ -42,7 +41,7 @@ public static class TextAssetPatcher
         }
         catch (Exception ex)
         {
-            MelonLogger.Error(ex);
+            LocalePatcherCore.LogError(ex.ToString());
         }
     }
 }

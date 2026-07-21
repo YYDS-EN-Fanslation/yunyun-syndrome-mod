@@ -34,24 +34,32 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build Release
-        run: dotnet build --no-restore --configuration Release /p:InstallModAfterBuild=false /p:GameLibs=./libs /p:MelonLibs=./libs
+      - name: Build MelonLoader Mod
+        run: dotnet build --no-restore --configuration MelonLoader /p:InstallModAfterBuild=false /p:GameLibs=./libs /p:MelonLibs=./libs
+
+      - name: Build BepInEx Mod
+        run: dotnet build --no-restore --configuration BepInEx /p:InstallModAfterBuild=false /p:GameLibs=./libs /p:MelonLibs=./libs
 
       - name: Prepare release folder structure
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Path "release\Mods"
+          New-Item -ItemType Directory -Path "release\BepInEx\plugins"
           New-Item -ItemType Directory -Path "release\UserData\LocalePatches"
-          Copy-Item "bin\x64\Release\netstandard2.1\YunyunLocalePatcher.dll" "release\Mods\"
+          Copy-Item "bin\x64\Release\netstandard2.1\YunyunLocalePatcher.MelonLoader.dll" "release\Mods\"
+          Copy-Item "bin\x64\Release\netstandard2.1\YunyunLocalePatcher.BepInEx.dll" "release\BepInEx\plugins\"
           Copy-Item "translations\YYDS EN Fanslation - Patch.csv" "release\UserData\LocalePatches\20-yyds-en-fanslation.csv"
           Copy-Item -Recurse "translations\YYDS-EN-Fanslation" "release\UserData\LocalePatches\YYDS-EN-Fanslation"
 
       - name: Compress Artifacts
         run: |
-          Compress-Archive -Path release/* -DestinationPath YunyunLocalePatcher.zip
+          Compress-Archive -Path "release/UserData", "release/Mods" -DestinationPath YunyunLocalePatcher.MelonLoader.zip
+          Compress-Archive -Path "release/UserData", "release/BepInEx" -DestinationPath YunyunLocalePatcher.BepInEx.zip
 
       - name: Upload Release
         uses: softprops/action-gh-release@v2
         with:
-          files: YunyunLocalePatcher.zip
           token: ${{ secrets.RELEASE_TOKEN }}
+          files: |
+            YunyunLocalePatcher.MelonLoader.zip
+            YunyunLocalePatcher.BepInEx.zip
