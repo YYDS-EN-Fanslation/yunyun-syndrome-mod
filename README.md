@@ -1,4 +1,4 @@
-# Yunyun Denpa Syndrome Translation Mod (BepInEx)
+﻿# Yunyun Denpa Syndrome Translation Mod
 
 [![Discord](https://img.shields.io/discord/1497391770118393967)](https://discord.gg/jYjTd5qpKv)
 [![Release](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-mod/actions/workflows/release.yaml/badge.svg)](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-mod/releases)
@@ -6,25 +6,41 @@
 
 This is a mod for [Yunyun Syndrome!? Rhythm Psychosis](https://store.steampowered.com/app/2914150/Yunyun_Syndrome_Rhythm_Psychosis/)
 from the [YYDS EN Fanslation Project](https://github.com/YYDS-EN-Fanslation). It loads and applies patches which can modify in-game text and images in order
-to tweak, change and fix the game's localization. The BepInEx port of the mod is currently maintained by [MeteoImpact](https://github.com/MeteoImpact), whose most recent translation is included in the release.
+to tweak, change and fix the game's localization. By default, YYDS fanslation is included in the release bundle.
 
 Looking for something else?
-- [Yunyun Denpa Syndrome Translation Mod (MelonLoader)](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-mod) - Original MelonLoader version of the mod
 - [Yunyun Syndrome Patch](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-patch) - Alternative patcher with simple installer
-- [Yunyun Syndrome Translation](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-translation) - Main project's translation repository
+- [Yunyun Syndrome Translation](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-translation) - Repository with the newest translation files
 - [YYDS EN Fanslation Project](https://github.com/YYDS-EN-Fanslation) - More information about YYDS EN Fanslation Project
 - [YYDS EN Fanslation Discord](https://discord.com/invite/Pd3CWA8BfD) - Our Discord
 
 ## How to Install
+1. Install **either** [MelonLoader](https://github.com/LavaGang/MelonLoader.Installer/tree/master#melonloader-installation) or [BepInEx](https://github.com/BepInEx/BepInEx/releases/) (do not install both!)
+    - **MelonLoader**
+        1. Go to [Releases](https://github.com/LavaGang/MelonLoader.Installer/releases)
+        2. Download and run the newest **Melonloader.Installer.exe**
+        3. Choose "Yunyun Syndrome!? Rhythm Psychosis"
+        4. Press "Install"
+        5. **(Linux only)** In Steam set Launch Options for Yunyun to `WINEDLLOVERRIDES="version=n,b" %command%` [read more](https://melonwiki.xyz/#/?id=windows-games-wineproton)
+    - **BepInEx**
+        1. Go to [Releases](https://github.com/BepInEx/BepInEx/releases/)
+        2. Download the newest **BepInEx_win_x64_\*.\*.\*.\*.zip**
+        3. Extract files into game folder *(eg: C:\Steam\steamapps\common\Yunyun_Syndrome)*
+        4. Make sure you have `BepInEx` folder in your game root now.
 
-1. Download [BepInEx](https://github.com/BepInEx/BepInEx/releases/) and extract to your root Yunyun Denpa Syndrome folder (by default C:\Steam\steamapps\common\Yunyun_Syndrome).
-
-2. Download the mod archive from the [Releases page](https://github.com/MeteoImpact/yunyun-syndrome-mod-BepInEx/releases/tag/Release) and extract to your root Yunyun Denpa Syndrome folder.
+2. Install [YunyunLocalePatcher](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-mod)
+    1. Go to [Releases](https://github.com/YYDS-EN-Fanslation/yunyun-syndrome-mod/releases)
+    2. Download the newest **YunyunLocalePatcher.Melonloader.zip** or **YunyunLocalePatcher.BepInEx.zip** depending on your mod loader of choice.
+    3. Extract files into game folder *(eg: C:\Steam\steamapps\common\Yunyun_Syndrome)*
+    4. Copy contents into game folder, make sure `Mods` or `BepInEx` folders are merged and the `YunyunLocalePatcher.dll` ended up
+       in `Yunyun_Syndrome\Mods` directory. 
 
 3. **(optional)** Add/remove locale patches in `Yunyun_Syndrome\UserData\LocalePatches` directory. For example:
     - [Radish](https://github.com/Radish-sys)'s MTL: [JP -> EN](https://raw.githubusercontent.com/YYDS-EN-Fanslation/yunyun-syndrome-translation/refs/heads/master/YYDS%20EN%20Fanslation%20-%20MTL%20Patch.csv)
     - Google Translate MTL: [JP -> EN](https://raw.githubusercontent.com/funmaker/YunyunLocalePatcher/refs/heads/master/examples/20-english-mtl.csv) (no dialogues)
     - [Moshi Moshi](https://github.com/lIllIIlI)'s: [JP -> EN](https://raw.githubusercontent.com/funmaker/YunyunLocalePatcher/refs/heads/master/examples/20-faithful-english.csv) ([#2](https://github.com/funmaker/YunyunLocalePatcher/pull/2)) (no dialogues)
+
+#### ⚠️ The mod file name changed in v1.5.0. If you want to update from any previous version, remove the old dll file named `YunyunLocalePatcher.dll` from `Yunyun_Syndrome\Mods` to avoid conflicts.
 
 ## How to make patches?
 

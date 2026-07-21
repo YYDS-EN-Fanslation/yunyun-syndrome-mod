@@ -7,14 +7,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YunyunLocalePatcher", "Yuny
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
-		Release|x64 = Release|x64
+		BepInEx|Any CPU = BepInEx|Any CPU
+		BepInEx|x64 = BepInEx|x64
+		MelonLoader|Any CPU = MelonLoader|Any CPU
+		MelonLoader|x64 = MelonLoader|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E9C8569D-9BFB-44EA-B786-D2A0D8321095}.Debug|x64.ActiveCfg = Debug|x64
-		{E9C8569D-9BFB-44EA-B786-D2A0D8321095}.Debug|x64.Build.0 = Debug|x64
-		{E9C8569D-9BFB-44EA-B786-D2A0D8321095}.Release|x64.ActiveCfg = Release|x64
-		{E9C8569D-9BFB-44EA-B786-D2A0D8321095}.Release|x64.Build.0 = Release|x64
+		{E9C8569D-9BFB-44EA-B786-D2A0D8321095}.BepInEx|Any CPU.ActiveCfg = MelonLoader|Any CPU
+		{E9C8569D-9BFB-44EA-B786-D2A0D8321095}.BepInEx|Any CPU.Build.0 = MelonLoader|Any CPU
+		{E9C8569D-9BFB-44EA-B786-D2A0D8321095}.BepInEx|x64.ActiveCfg = BepInEx|x64
+		{E9C8569D-9BFB-44EA-B786-D2A0D8321095}.BepInEx|x64.Build.0 = BepInEx|x64
+		{E9C8569D-9BFB-44EA-B786-D2A0D8321095}.MelonLoader|Any CPU.ActiveCfg = MelonLoader|Any CPU
+		{E9C8569D-9BFB-44EA-B786-D2A0D8321095}.MelonLoader|Any CPU.Build.0 = MelonLoader|Any CPU
+		{E9C8569D-9BFB-44EA-B786-D2A0D8321095}.MelonLoader|x64.ActiveCfg = MelonLoader|x64
+		{E9C8569D-9BFB-44EA-B786-D2A0D8321095}.MelonLoader|x64.Build.0 = MelonLoader|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

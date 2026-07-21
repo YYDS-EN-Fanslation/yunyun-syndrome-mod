@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Text;
 using ANovel.Core;
-using BepInEx;
-using BepInEx.Logging;
-using HarmonyLib;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
@@ -11,62 +8,75 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace YunyunLocalePatcher;
 
-[BepInPlugin("YunyunLocalePatcher", "YunyunLocalePatcher", "1.4.0")]
-public class LocalePatcherCore : BaseUnityPlugin
+public class LocalePatcherCore
 {
     public static PatchFile patches;
-    public static string patchesRoot = Paths.GameRootPath + "\\UserData\\LocalePatches";
-    private Harmony _harmony;
-    internal static ManualLogSource Log;
+    public static string patchesRoot;
+    public static ILocalePatcher localePatcher;
+    private static HarmonyLib.Harmony harmony;
 
-    public void Awake()
+    public static void OnInitialize(ILocalePatcher localePatcher)
     {
-        Log = Logger;
-        PatchFile.Initialize(Log);
-        TablePatcher.Initialize(Log);
-        TextAssetPatcher.Initialize(Log);
+        LocalePatcherCore.localePatcher = localePatcher;
+
+        patchesRoot = Path.Combine(localePatcher.GetUserDataDir(), "LocalePatches");
 
         string[] args = Environment.GetCommandLineArgs();
         if (args.Contains("--localepatcher.dumpstrings"))
         {
             string dumpName = "00-base";
-            Log.LogMessage($"--localepatcher.dumpstrings has been passed to the game. Dumping all translation strings to ${Path.Combine(patchesRoot, dumpName)}.csv");
-            StartCoroutine(DumpAllStrings(dumpName));
+            Log($"--localepatcher.dumpstrings has been passed to the game. Dumping all translation strings to ${Path.Combine(patchesRoot, dumpName)}.csv");
+            localePatcher.StartCoroutine(DumpAllStrings(dumpName));
             return;
         }
 
         var patches = LocalePatcherCore.patches = LoadAllPatches();
         if (patches.Count == 0)
         {
-            Log.LogWarning("Nothing to patch! Quitting.");
+            LogWarning("Nothing to patch! Quitting.");
             return;
         }
 
         var settings = LocalizationSettings.Instance;
         if (settings == null || settings.GetStringDatabase().TablePostprocessor != null)
         {
-            Log.LogError("Table postprocessor is already registered. YunyunLocalePatcher will not work.");
+            LogError("Table postprocessor is already registered. YunyunLocalePatcher will not work.");
             return;
         }
 
         TablePatcher tablePatcher = new TablePatcher();
 
         settings.GetStringDatabase().TablePostprocessor = tablePatcher;
-        Log.LogMessage("StringTable postprocessor registered.");
+        Log("StringTable postprocessor registered.");
 
         settings.GetAssetDatabase().TablePostprocessor = tablePatcher;
-        Log.LogMessage("AssetTable postprocessor registered.");
+        Log("AssetTable postprocessor registered.");
 
-        this._harmony = new Harmony("com.funmaker.yunyunpatch");
-        this._harmony.PatchAll();
-        Log.LogMessage("TextAsset patch registered.");
+        harmony = localePatcher.GetHarmony();
+        harmony.PatchAll();
+        Log("TextAsset patch registered.");
 
-        Log.LogMessage("Intialization complete.");
+        Log("Intialization complete.");
     }
 
-    private PatchFile LoadAllPatches()
+    public static void Log(string message)
     {
-        Log.LogMessage($"Loading patches from {patchesRoot}");
+        if (localePatcher != null) localePatcher.Log(message);
+    }
+
+    public static void LogWarning(string message)
+    {
+        if (localePatcher != null) localePatcher.LogWarning(message);
+    }
+
+    public static void LogError(string message)
+    {
+        if (localePatcher != null) localePatcher.LogError(message);
+    }
+
+    private static PatchFile LoadAllPatches()
+    {
+        Log($"Loading patches from {patchesRoot}");
 
         var patches = new PatchFile();
         int fileCount = 0;
@@ -82,34 +92,34 @@ public class LocalePatcherCore : BaseUnityPlugin
                 {
                     if (fileName == "00-base.csv")
                     {
-                        Log.LogWarning($"Skipping 00-base.csv. Have you forgotten to remove it?");
+                        LogWarning($"Skipping 00-base.csv. Have you forgotten to remove it?");
                         continue;
                     }
 
-                    Log.LogMessage($"Loading {fileName}");
+                    Log($"Loading {fileName}");
                     var patchFile = PatchFile.Load(file);
                     patches.Append(patchFile);
                     fileCount += 1;
-                    Log.LogMessage($"Loaded {fileName} ({patches.Count} entries)");
+                    Log($"Loaded {fileName} ({patches.Count} entries)");
                 }
                 catch (Exception ex)
                 {
-                    Log.LogError($"Couldn't load {fileName}: {ex.Message}");
+                    LogError($"Couldn't load {fileName}: {ex.Message}");
                 }
             }
         }
         else
         {
-            Log.LogWarning($"Directory doesn't exist. Creating.");
+            LogWarning($"Directory doesn't exist. Creating.");
             Directory.CreateDirectory(patchesRoot);
         }
 
-        Log.LogMessage($"Loaded {fileCount} patch files, {patches.Count} entries in total");
+        Log($"Loaded {fileCount} patch files, {patches.Count} entries in total");
 
         return patches;
     }
 
-    private IEnumerator DumpAllStrings(string dumpName)
+    private static IEnumerator DumpAllStrings(string dumpName)
     {
         yield return LocalizationSettings.InitializationOperation;
 
@@ -120,14 +130,14 @@ public class LocalePatcherCore : BaseUnityPlugin
 
         foreach (var locale in locales)
         {
-            Log.LogMessage($"Dumping StringTables for Locale: {locale.LocaleName}");
+            Log($"Dumping StringTables for Locale: {locale.LocaleName}");
 
             var handle = LocalizationSettings.StringDatabase.GetAllTables(locale);
             yield return handle;
 
             if (handle.Status != AsyncOperationStatus.Succeeded)
             {
-                Log.LogWarning($"Failed to load string tables for {locale.LocaleName}");
+                LogWarning($"Failed to load string tables for {locale.LocaleName}");
                 continue;
             }
 
@@ -150,14 +160,14 @@ public class LocalePatcherCore : BaseUnityPlugin
 
         foreach (var locale in locales)
         {
-            Log.LogMessage($"Dumping AssetTables for Locale: {locale.LocaleName}");
+            Log($"Dumping AssetTables for Locale: {locale.LocaleName}");
 
             var handle = LocalizationSettings.AssetDatabase.GetAllTables(locale);
             yield return handle;
 
             if (handle.Status != AsyncOperationStatus.Succeeded)
             {
-                Log.LogWarning($"Failed to load asset tables for {locale.LocaleName}");
+                LogWarning($"Failed to load asset tables for {locale.LocaleName}");
                 continue;
             }
 
@@ -172,7 +182,7 @@ public class LocalePatcherCore : BaseUnityPlugin
 
                         if (assetHandle.Status != AsyncOperationStatus.Succeeded)
                         {
-                            Log.LogWarning($"Failed to load asset for key '{entry.Key}' in table '{at.name}'");
+                            LogWarning($"Failed to load asset for key '{entry.Key}' in table '{at.name}'");
                             continue;
                         }
 
@@ -184,7 +194,7 @@ public class LocalePatcherCore : BaseUnityPlugin
                         else if (asset is Sprite sprite) texture = LocalePatcherCore.GetReadableSprite(sprite);
                         else
                         {
-                            Log.LogMessage($"Asset '{entry.Key}' is not a Texture2D or Sprite, skipping.");
+                            Log($"Asset '{entry.Key}' is not a Texture2D or Sprite, skipping.");
                             continue;
                         }
 
@@ -212,7 +222,7 @@ public class LocalePatcherCore : BaseUnityPlugin
 
             if (textAsset.name.EndsWith(".lang"))
             {
-                Log.LogMessage($"Dumping Event lines for: {textAsset.name}");
+                Log($"Dumping Event lines for: {textAsset.name}");
 
                 try
                 {
@@ -233,7 +243,7 @@ public class LocalePatcherCore : BaseUnityPlugin
                 }
                 catch (Exception ex)
                 {
-                    Log.LogError(ex);
+                    LogError(ex.ToString());
                 }
             }
         }
@@ -252,12 +262,12 @@ public class LocalePatcherCore : BaseUnityPlugin
 
         File.WriteAllText(Path.Combine(patchesRoot, $"{dumpName}.csv"), dump.ToString());
 
-        Log.LogMessage($"Dumped {entries.Count} entries to {dumpName}.csv");
+        Log($"Dumped {entries.Count} entries to {dumpName}.csv");
 
-        Log.LogWarning($"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        Log.LogWarning($"!              YunyunLocalePatcher will not patch any locales!              !");
-        Log.LogWarning($"! Remove --localepatcher.dumpstrings from launch options to enable patching !");
-        Log.LogWarning($"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        LogWarning($"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        LogWarning($"!              YunyunLocalePatcher will not patch any locales!              !");
+        LogWarning($"! Remove --localepatcher.dumpstrings from launch options to enable patching !");
+        LogWarning($"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
     private static Texture2D GetReadableTexture(Texture2D source)

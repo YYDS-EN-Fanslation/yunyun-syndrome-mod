@@ -1,6 +1,5 @@
 using ANovel.Core;
 using HarmonyLib;
-using BepInEx.Logging;
 using UnityEngine;
 
 namespace YunyunLocalePatcher;
@@ -8,13 +7,6 @@ namespace YunyunLocalePatcher;
 [HarmonyPatch(typeof(TextAsset), "text", MethodType.Getter)]
 public static class TextAssetPatcher
 {
-    private static ManualLogSource Log;
-
-    public static void Initialize(ManualLogSource logger)
-    {
-        Log = logger;
-    }
-
     static void Postfix(TextAsset __instance, ref string __result)
     {
         if (LocalePatcherCore.patches == null) return;
@@ -22,7 +14,7 @@ public static class TextAssetPatcher
 
         try
         {
-            Log.LogMessage($"Patching text asset: {__instance.name}...");
+            LocalePatcherCore.Log($"Patching text asset: {__instance.name}...");
 
             LocalizeData localizeData = JsonUtility.FromJson<LocalizeData>(__result);
 
@@ -40,7 +32,7 @@ public static class TextAssetPatcher
                 }
             }
 
-            Log.LogMessage($"Patched {count} entries in {__instance.name}.");
+            LocalePatcherCore.Log($"Patched {count} entries in {__instance.name}.");
 
             if (count > 0)
             {
@@ -49,7 +41,7 @@ public static class TextAssetPatcher
         }
         catch (Exception ex)
         {
-            Log.LogError(ex);
+            LocalePatcherCore.LogError(ex.ToString());
         }
     }
 }
