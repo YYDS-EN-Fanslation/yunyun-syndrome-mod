@@ -11,7 +11,7 @@
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Platforms>AnyCPU;x64</Platforms>
+		<Platforms>x64</Platforms>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 		<Optimize>true</Optimize>

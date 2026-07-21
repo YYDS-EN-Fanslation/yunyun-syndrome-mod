@@ -46,8 +46,8 @@ jobs:
           New-Item -ItemType Directory -Path "release\Mods"
           New-Item -ItemType Directory -Path "release\BepInEx\plugins"
           New-Item -ItemType Directory -Path "release\UserData\LocalePatches"
-          Copy-Item "bin\x64\Release\netstandard2.1\YunyunLocalePatcher.MelonLoader.dll" "release\Mods\"
-          Copy-Item "bin\x64\Release\netstandard2.1\YunyunLocalePatcher.BepInEx.dll" "release\BepInEx\plugins\"
+          Copy-Item "bin\x64\MelonLoader\netstandard2.1\YunyunLocalePatcher.MelonLoader.dll" "release\Mods\"
+          Copy-Item "bin\x64\BepInEx\netstandard2.1\YunyunLocalePatcher.BepInEx.dll" "release\BepInEx\plugins\"
           Copy-Item "translations\YYDS EN Fanslation - Patch.csv" "release\UserData\LocalePatches\20-yyds-en-fanslation.csv"
           Copy-Item -Recurse "translations\YYDS-EN-Fanslation" "release\UserData\LocalePatches\YYDS-EN-Fanslation"
 
