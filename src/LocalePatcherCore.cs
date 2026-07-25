@@ -151,7 +151,6 @@ public class LocalePatcherCore
                             st.name,
                             entry.Key,
                             entry.Value,
-                            entry.KeyId.ToString(),
                         ]);
                     }
                 }
@@ -207,7 +206,6 @@ public class LocalePatcherCore
                             at.name,
                             entry.Key,
                             path,
-                            entry.KeyId.ToString(),
                         ]);
                     }
                 }
@@ -236,7 +234,6 @@ public class LocalePatcherCore
                                 textAsset.name,
                                 locale.Language + "/" + i,
                                 locale.Lines[i],
-                                localizeData.Keys[i] + "/" + locale.Language,
                             ]);
                         }
                     }
@@ -256,7 +253,7 @@ public class LocalePatcherCore
         });
 
         var dump = new StringBuilder();
-        dump.AppendLine(Csv.SerializeLine(["TableName", "Key", "Text", /* "KeyId" */]));
+        dump.AppendLine(Csv.SerializeLine(["TableName", "Key", "Text"]));
         foreach (var row in entries)
             dump.AppendLine(Csv.SerializeLine(row));
 
