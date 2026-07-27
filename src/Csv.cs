@@ -79,7 +79,8 @@ public static class Csv
             bool needsQuotes = value.Contains(',')
                             || value.Contains('"')
                             || value.Contains('\n')
-                            || value.Contains('\r');
+                            || value.Contains('\r')
+                            || value.Trim() != value;
 
             if (needsQuotes)
             {
